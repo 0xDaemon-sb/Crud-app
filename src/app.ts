@@ -1,9 +1,10 @@
 import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import { connectDatabase } from './config/database';
 
-// Load environment variables
 dotenv.config();
+connectDatabase();
 
 const app: Application = express();
 const PORT = process.env.PORT || 3000;
