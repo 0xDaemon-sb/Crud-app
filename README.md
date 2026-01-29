@@ -1,4 +1,4 @@
-# CredPal Backend API
+# Crud Backend API
 
 A complete CRUD REST API built with Node.js, Express, TypeScript, and MongoDB for the CredPal Backend Developer Assessment.
 
