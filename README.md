@@ -27,7 +27,7 @@ A complete CRUD REST API built with Node.js, Express, TypeScript, and MongoDB fo
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd crud
+cd crud-app
 
 # Install dependencies
 npm install
