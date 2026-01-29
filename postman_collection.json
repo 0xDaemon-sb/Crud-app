@@ -14,6 +14,14 @@
             "value": ""
         },
         {
+            "key": "USER_AUTH",
+            "value": ""
+        },
+        {
+            "key": "ADMIN_AUTH",
+            "value": ""
+        },
+        {
             "key": "userId",
             "value": ""
         },
@@ -27,7 +35,7 @@
             "name": "Auth",
             "item": [
                 {
-                    "name": "Register",
+                    "name": "Register User",
                     "request": {
                         "method": "POST",
                         "header": [
@@ -36,9 +44,19 @@
                                 "value": "application/json"
                             }
                         ],
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{USER_AUTH}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"user\"\n}"
+                            "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"user\"\n}"
                         },
                         "url": {
                             "raw": "{{baseUrl}}/api/auth/register",
@@ -59,8 +77,9 @@
                                 "exec": [
                                     "if (pm.response.code === 201) {",
                                     "  const json = pm.response.json();",
-                                    "  pm.collectionVariables.set('token', json.data.token);",
+                                    "  pm.collectionVariables.set('USER_AUTH', json.data.token);",
                                     "  pm.collectionVariables.set('userId', json.data.user._id);",
+                                    "  pm.collectionVariables.set('token', json.data.token);",
                                     "}"
                                 ]
                             }
@@ -68,7 +87,7 @@
                     ]
                 },
                 {
-                    "name": "Login (JWT)",
+                    "name": "Register Admin",
                     "request": {
                         "method": "POST",
                         "header": [
@@ -77,9 +96,70 @@
                                 "value": "application/json"
                             }
                         ],
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{ADMIN_AUTH}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+                            "raw": "{\n  \"name\": \"Admin User\",\n  \"email\": \"admin@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"admin\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/auth/register",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "auth",
+                                "register"
+                            ]
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 201) {",
+                                    "  const json = pm.response.json();",
+                                    "  pm.collectionVariables.set('ADMIN_AUTH', json.data.token);",
+                                    "  pm.collectionVariables.set('token', json.data.token);",
+                                    "}"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Login User (JWT)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{USER_AUTH}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
                         },
                         "url": {
                             "raw": "{{baseUrl}}/api/auth/login",
@@ -100,8 +180,60 @@
                                 "exec": [
                                     "if (pm.response.code === 200) {",
                                     "  const json = pm.response.json();",
-                                    "  pm.collectionVariables.set('token', json.data.token);",
+                                    "  pm.collectionVariables.set('USER_AUTH', json.data.token);",
                                     "  pm.collectionVariables.set('userId', json.data.user._id);",
+                                    "  pm.collectionVariables.set('token', json.data.token);",
+                                    "}"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Login Admin (JWT)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{ADMIN_AUTH}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password123\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/auth/login",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "auth",
+                                "login"
+                            ]
+                        }
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 200) {",
+                                    "  const json = pm.response.json();",
+                                    "  pm.collectionVariables.set('ADMIN_AUTH', json.data.token);",
+                                    "  pm.collectionVariables.set('token', json.data.token);",
                                     "}"
                                 ]
                             }
@@ -140,12 +272,17 @@
                     "name": "Get Me",
                     "request": {
                         "method": "GET",
-                        "header": [
-                            {
-                                "key": "Authorization",
-                                "value": "Bearer {{token}}"
-                            }
-                        ],
+                        "header": [],
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
                         "url": {
                             "raw": "{{baseUrl}}/api/auth/me",
                             "host": [
@@ -185,12 +322,17 @@
                     "name": "Get All Users",
                     "request": {
                         "method": "GET",
-                        "header": [
-                            {
-                                "key": "Authorization",
-                                "value": "Bearer {{token}}"
-                            }
-                        ],
+                        "header": [],
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
                         "url": {
                             "raw": "{{baseUrl}}/api/users?page=1&limit=10",
                             "host": [
@@ -217,12 +359,17 @@
                     "name": "Get User by ID",
                     "request": {
                         "method": "GET",
-                        "header": [
-                            {
-                                "key": "Authorization",
-                                "value": "Bearer {{token}}"
-                            }
-                        ],
+                        "header": [],
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
                         "url": {
                             "raw": "{{baseUrl}}/api/users/{{userId}}",
                             "host": [
@@ -244,12 +391,18 @@
                             {
                                 "key": "Content-Type",
                                 "value": "application/json"
-                            },
-                            {
-                                "key": "Authorization",
-                                "value": "Bearer {{token}}"
                             }
                         ],
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
                         "body": {
                             "mode": "raw",
                             "raw": "{\n  \"name\": \"Updated Name\",\n  \"email\": \"updated@example.com\"\n}"
@@ -275,12 +428,18 @@
                             {
                                 "key": "Content-Type",
                                 "value": "application/json"
-                            },
-                            {
-                                "key": "Authorization",
-                                "value": "Bearer {{token}}"
                             }
                         ],
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
                         "body": {
                             "mode": "raw",
                             "raw": "{\n  \"name\": \"Patched Name\"\n}"
@@ -302,12 +461,17 @@
                     "name": "Delete User",
                     "request": {
                         "method": "DELETE",
-                        "header": [
-                            {
-                                "key": "Authorization",
-                                "value": "Bearer {{token}}"
-                            }
-                        ],
+                        "header": [],
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
                         "url": {
                             "raw": "{{baseUrl}}/api/users/{{userId}}",
                             "host": [
@@ -377,12 +541,18 @@
                             {
                                 "key": "Content-Type",
                                 "value": "application/json"
-                            },
-                            {
-                                "key": "Authorization",
-                                "value": "Bearer {{token}}"
                             }
                         ],
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
                         "body": {
                             "mode": "raw",
                             "raw": "{\n  \"name\": \"Test Product\",\n  \"description\": \"A sample product\",\n  \"price\": 99.99,\n  \"quantity\": 10,\n  \"category\": \"Electronics\"\n}"
@@ -420,12 +590,18 @@
                             {
                                 "key": "Content-Type",
                                 "value": "application/json"
-                            },
-                            {
-                                "key": "Authorization",
-                                "value": "Bearer {{token}}"
                             }
                         ],
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
                         "body": {
                             "mode": "raw",
                             "raw": "{\n  \"name\": \"Updated Product\",\n  \"description\": \"Updated description\",\n  \"price\": 149.99,\n  \"quantity\": 20,\n  \"category\": \"Electronics\"\n}"
@@ -451,12 +627,18 @@
                             {
                                 "key": "Content-Type",
                                 "value": "application/json"
-                            },
-                            {
-                                "key": "Authorization",
-                                "value": "Bearer {{token}}"
                             }
                         ],
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
                         "body": {
                             "mode": "raw",
                             "raw": "{\n  \"price\": 199.99\n}"
@@ -478,12 +660,17 @@
                     "name": "Delete Product",
                     "request": {
                         "method": "DELETE",
-                        "header": [
-                            {
-                                "key": "Authorization",
-                                "value": "Bearer {{token}}"
-                            }
-                        ],
+                        "header": [],
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
                         "url": {
                             "raw": "{{baseUrl}}/api/products/{{productId}}",
                             "host": [
