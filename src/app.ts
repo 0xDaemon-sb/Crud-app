@@ -29,6 +29,16 @@ app.use(
     })
 );
 
+// Request logging middleware
+app.use((req: Request, res: Response, next: NextFunction) => {
+    const start = Date.now();
+    res.on('finish', () => {
+        const duration = Date.now() - start;
+        console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl} ${res.statusCode} - ${duration}ms`);
+    });
+    next();
+});
+
 app.get('/health', (req: Request, res: Response) => {
     res.json({ success: true, message: 'CredPal API is running', timestamp: new Date().toISOString() });
 });
