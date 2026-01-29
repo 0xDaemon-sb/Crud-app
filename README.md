@@ -1,6 +1,6 @@
 # Crud Backend API
 
-A complete CRUD REST API built with Node.js, Express, TypeScript, and MongoDB for the CredPal Backend Developer Assessment.
+A complete CRUD REST API built with Node.js, Express, TypeScript, and MongoDB for the crud Backend Developer Assessment.
 
 ![Node.js](https://img.shields.io/badge/Node.js-18+-339933?logo=node.js&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6?logo=typescript&logoColor=white)
@@ -27,7 +27,7 @@ A complete CRUD REST API built with Node.js, Express, TypeScript, and MongoDB fo
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd credpal
+cd crud
 
 # Install dependencies
 npm install
@@ -131,7 +131,7 @@ npm run test:coverage
 |----------|-------------|---------|
 | `PORT` | Server port | `3000` |
 | `NODE_ENV` | Environment | `development` |
-| `MONGODB_URI` | MongoDB connection string | `mongodb://localhost:27017/credpal` |
+| `MONGODB_URI` | MongoDB connection string | `mongodb://localhost:27017/crud` |
 | `JWT_SECRET` | JWT signing key | - |
 | `JWT_EXPIRES_IN` | Token expiration | `7d` |
 | `SESSION_SECRET` | Session signing key | - |
